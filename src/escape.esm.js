@@ -1,9 +1,10 @@
 /*
  * Functions for string (un)escaping
+ * Author: Brian Katzung <briank@kappacs.com>
  */
 
 // Generate string escapes for JavaScript
-export function escapeJSString (s) {
+export function escapeJSString (s, { sq = true, dq = true } = {}) {
     // deno-lint-ignore no-control-regex
     return s.replace(/[\x00-\x1f'"\\\x7f-\uffff]/g, c => {
 	switch (c) {
@@ -11,8 +12,8 @@ export function escapeJSString (s) {
 	case '\n': return '\\n';
 	case '\r': return '\\r';
 	case '\t': return '\\t';
-	case "'": return "\\'";
-	case '"': return '\\"';
+	case "'": return (sq ? "\\'" : "'");
+	case '"': return (dq ? '\\"' : '"');
 	case '\\': return '\\\\';
 	}
 	const cc = c.charCodeAt(), ccs = cc.toString(16);

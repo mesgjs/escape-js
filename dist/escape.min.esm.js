@@ -1,0 +1,3 @@
+function a(n,{sq:r=!0,dq:u=!0}={}){return n.replace(/[\x00-\x1f'"\\\x7f-\uffff]/g,c=>{switch(c){case"\b":return"\\b";case`
+`:return"\\n";case"\r":return"\\r";case"	":return"\\t";case"'":return r?"\\'":"'";case'"':return u?'\\"':'"';case"\\":return"\\\\"}const e=c.charCodeAt(),t=e.toString(16);return e<16?"\\x0"+t:e<256?"\\x"+t:e<4096?"\\u0"+t:"\\u"+t})}function s(n){return n.replace(/\\[\\bnrt'"]|\\x[\da-fA-F]{2}|\\u[\da-fA-F]{4}/g,r=>{switch(r[1]){case"\\":case"'":case'"':case"b":case"n":case"r":case"t":return{"\\":"\\","'":"'",'"':'"',b:"\b",n:`
+`,r:"\r",t:"	"}[r[1]];case"x":case"u":return String.fromCharCode(parseInt(r.substring(2),16))}})}export{a as escapeJSString,s as unescapeJSString};
