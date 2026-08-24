@@ -26,7 +26,7 @@ export function escapeJSString (s, { sq = true, dq = true } = {}) {
 
 // Convert an escapped (input) string into a raw (internal) string
 export function unescapeJSString (input) {
-	return input.replace(/\\[\\bnrt'"]|\\x[\da-fA-F]{2}|\\u[\da-fA-F]{4}/g, e => {
+	return input.replace(/\\[\\bnrt'"]|\\x[\da-fA-F]{2}|\\u\{0[dD]\d+\}|\\u\{[0-9a-fA-F]+\}|\\u[\da-fA-F]{4}/g, e => {
 		switch (e[1]) {
 		case '\\': case "'": case '"':
 		case 'b': case 'n': case 'r': case 't':
@@ -35,6 +35,12 @@ export function unescapeJSString (input) {
 				b: '\b', n: '\n', r: '\r', t: '\t'
 			})[e[1]]);
 		case 'x': case 'u':
+			if (e[2] === '{') {
+				if (e[3] === '0' && (e[4] === 'd' || e[4] === 'D')) {
+					return String.fromCodePoint(parseInt(e.slice(5, -1), 10));
+				}
+				return String.fromCodePoint(parseInt(e.slice(3, -1), 16));
+			}
 			return String.fromCharCode(parseInt(e.substring(2), 16));
 		}
 	});
